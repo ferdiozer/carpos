@@ -1,0 +1,15 @@
+{
+    "language": "Türkçe",
+    "screens": {
+        "profile": {
+            "title": "Profil Sayfası",
+            "password": "Şifre",
+            "updatePassword": "Şifreyi güncelle",
+            "updateCompanyName": "Firma adı güncelle",
+            "exit": "Çıkış yap",
+            "lock": "Kilitle",
+            "settings": "Ayarlar",
+            "unlock": "Kilidi aç"
+        }
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "language": "English",
+    "screens": {
+        "profile": {
+            "title": "Profile Page",
+            "text": {
+                "password": "password"
+            }
+        }
+    }
+}

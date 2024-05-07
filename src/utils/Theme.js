@@ -1,0 +1,33 @@
+
+const lightTheme={
+input_Border_color:"#ECECEC",
+input_BG_color:"#FAFAFA",
+input_label:"#000000",
+simple_Btn_BG:"#1F673F",
+white:"#FFFFFF",
+eyeIcon_col:"#CECECE",
+themeColor:"#c0392b",
+black:"#000000",
+DarkGreen:"#1F673F",
+lightGrey:"#e6e6fa",
+red:"red",
+minLitegrey:"#F4F4F4",
+doc_First_Index_color:"#F4F4FF",
+inputText:"#778899",
+reject:"#e74c3c",
+lightGreen:"#90ee90",
+Accept:"#50CD89",
+Rejected:'#009EF7',
+Pending:'#7239EA',
+forgetPassword:"#00C4E2",
+inputGrey:"rgba(225, 229, 245, 1)",
+lightBlue:"#AEB9D6",
+minLightBlue:"#dcdcdc",
+lightBlack:"#282828",
+tabs:"#4366D0",
+inputNormal:"#e6e6fa",
+inputSuccess:"#1dd1a1",
+inputError:"#ee5253",
+
+}
+export default lightTheme;
