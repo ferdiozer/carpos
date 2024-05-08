@@ -19,6 +19,8 @@ npm start
 
 npm start -- --reset-cache
 
+./gradlew assembleRelease
+
 
 # OR using Yarn
 yarn start
