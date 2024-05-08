@@ -9,12 +9,13 @@ import { onNavigate } from '../navigation/Methods'
 import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedVehicleTypeIndexAc } from '../StateManagment/Redux/Actions/Index'
 import { showToast } from '../helpers/ToastHelper'
-import { addInCarParking, getInCarParkingByPlate, getSettings } from '../DBfunctions/db'
+import { addInCarParking, getInCarParkingByPlate } from '../DBfunctions/db'
 import { useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 //printer
 import { BluetoothManager, BluetoothEscposPrinter, BluetoothTscPrinter } from '@brooons/react-native-bluetooth-escpos-printer';
 import { toLatinFromTurkish } from '../helpers'
+import { requestBluetoothPermission } from '../components/permission'
 
 const Page = ({
   navigation
@@ -27,34 +28,28 @@ const Page = ({
   const selectedVehicleTypeIndex = useSelector(state => state?.auth?.selectedVehicleTypeIndex) || 0;
 
   const [plate, setPlate] = useState('');
-  const [carInPrint, setCarInPrint] = useState(0);
 
   useEffect(() => {
     const checkDrivers = async () => {
-      try {
-        const isEnabled = await BluetoothManager.checkBluetoothEnabled();
-        if (isEnabled) {
-          const devices = await BluetoothManager.enableBluetooth();
-          await BluetoothManager.connect(JSON.parse(devices).address);
-        } else {
-          Alert.alert("Uyarı", "Fiş yazdırmak için Bluetooth açık olmalı!")
+      const bluetoothPermission = await requestBluetoothPermission()
+      if (bluetoothPermission) {
+        try {
+          const isEnabled = await BluetoothManager.checkBluetoothEnabled();
+          if (isEnabled) {
+            const devices = await BluetoothManager.enableBluetooth();
+            await BluetoothManager.connect(JSON.parse(devices).address);
+          } else {
+            Alert.alert("Uyarı", "Fiş yazdırmak için Bluetooth açık olmalı!")
+          }
+        } catch (error) {
+          console.error(error)
         }
-      } catch (error) {
-        console.error(error)
       }
     }
     checkDrivers()
   }, [])
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let settingsDb = await getSettings();
-        setCarInPrint(settingsDb.carInPrint)
-      } catch (error) {
-        console.error(error)
-      }
-    }
     if (isFocused) {
       if (vehicleTypes.length == 0) {
         Alert.alert("Uyarı", "Öncelikle araç tipi ekleyin!", [
@@ -71,7 +66,6 @@ const Page = ({
         ],
           { cancelable: false },)
       }
-      fetchData()
     }
   }, [isFocused]);
 
@@ -119,13 +113,13 @@ const Page = ({
       await BluetoothEscposPrinter.printerAlign(BluetoothEscposPrinter.ALIGN.LEFT);
       await BluetoothEscposPrinter.printText("\n\r", {});
       await BluetoothEscposPrinter.printText(toLatinFromTurkish(plate) + "\n\r", {});
-      await BluetoothEscposPrinter.printText("------------------------------------", {});
+      await BluetoothEscposPrinter.printText("GIRIS------------------------------------", {});
       await BluetoothEscposPrinter.printText("\n\r", {});
       await BluetoothEscposPrinter.printText(settings?.addressLine1, {});
       await BluetoothEscposPrinter.printText("\n\r", {});
       await BluetoothEscposPrinter.printText(settings?.addressLine2, {});
       await BluetoothEscposPrinter.printText("\n\r", {});
-      if(settings?.addressLine3){
+      if (settings?.addressLine3) {
         await BluetoothEscposPrinter.printText(settings?.addressLine3, {});
         await BluetoothEscposPrinter.printText("\n\r", {});
       }
@@ -211,7 +205,7 @@ const Page = ({
       <ActionSheet
         ref={refActionSheet}
         title={'Araç tipi'}
-        options={vehicleTypes.map(v => v.name.toString()).concat(['Kapat'])}
+        options={vehicleTypes.map(v => v.name.toString() + " " + v.huorlyPrice.toString() + "₺").concat(['Kapat'])}
         cancelButtonIndex={vehicleTypes.length}
         destructiveButtonIndex={vehicleTypes.length}
         onPress={(index) => {

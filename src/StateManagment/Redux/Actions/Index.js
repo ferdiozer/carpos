@@ -6,6 +6,7 @@ export const SET_USER_PASSWORD = "SET_USER_PASSWORD";
 export const SET_VEHICLE_TYPES = "SET_VEHICLE_TYPES";
 export const SET_SETTINGS = "SET_SETTINGS";
 export const SET_SELECTED_VEHICLE_TYPE_INDEX = "SET_SELECTED_VEHICLE_TYPE_INDEX";
+export const PUSH_LAST_EXIST_IN_CAR_PARKING = "PUSH_LAST_EXIST_IN_CAR_PARKING";
 
 export const setUserAc = payload => ({
   type: SET_USER,
@@ -46,6 +47,13 @@ export const setSelectedVehicleTypeIndexAc = payload => ({
   type: SET_SELECTED_VEHICLE_TYPE_INDEX,
   payload: payload
 });
+
+export const pushLastExistInCarParkingAc = payload => ({
+  type: PUSH_LAST_EXIST_IN_CAR_PARKING,
+  payload: payload
+});
+
+
 
 
 
