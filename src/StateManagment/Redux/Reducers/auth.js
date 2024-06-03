@@ -1,4 +1,4 @@
-import { PUSH_LAST_EXIST_IN_CAR_PARKING, SET_IS_LOCK, SET_IS_LOGIN, SET_SELECTED_VEHICLE_TYPE_INDEX, SET_SETTINGS, SET_USER, SET_USER_COMPANY_NAME, SET_USER_PASSWORD, SET_VEHICLE_TYPES } from "../Actions/Index";
+import { PUSH_LAST_EXIST_IN_CAR_PARKING, SET_HOURS, SET_IS_LOCK, SET_IS_LOGIN, SET_SELECTED_VEHICLE_TYPE_INDEX, SET_SETTINGS, SET_TARIFFS, SET_USER, SET_USER_COMPANY_NAME, SET_USER_PASSWORD, SET_VEHICLE_TYPES } from "../Actions/Index";
 
 const initialState = {
   isLoading: false,
@@ -7,9 +7,11 @@ const initialState = {
   user: {},
   token: null,
   vehicleTypes: [],
+  vehicleHours: [],
   settings: {},
   selectedVehicleTypeIndex: 0,
-  lastExitInCarParkingList: []
+  lastExitInCarParkingList: [],
+  tariffList: []
 };
 
 const userprofile_Reducer = (state = initialState, action) => {
@@ -72,6 +74,18 @@ const userprofile_Reducer = (state = initialState, action) => {
       return {
         ...state,
         lastExitInCarParkingList: [action.payload, ...(state.lastExitInCarParkingList || [])].slice(0, 10)
+      };
+    }
+    case SET_HOURS: {
+      return {
+        ...state,
+        vehicleHours: action.payload
+      };
+    }
+    case SET_TARIFFS: {
+      return {
+        ...state,
+        tariffList: action.payload
       };
     }
 

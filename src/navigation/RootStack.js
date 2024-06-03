@@ -8,13 +8,13 @@ import PublicStackScreen from './PublicStackScreen';
 
 import LoadingMain from '../components/LoadingMain';
 
-import { setIsLockAc, setIsLoginAc, setSettingsAc, setUserAc, setVehicleTypesAc } from '../StateManagment/Redux/Actions/Index'
+import { setIsLockAc, setIsLoginAc, setSettingsAc, setTariffsAc, setUserAc, setVehicleTypesAc } from '../StateManagment/Redux/Actions/Index'
 
 import { useSelector, useDispatch } from 'react-redux';
 
 
 import lightTheme from '../utils/Theme';
-import { addSettings, addUser, createTables, getSettings, getUsers, getVehicleTypes } from '../DBfunctions/db';
+import { addSettings, addUser, createTables, getSettings, getTariff, getUsers, getVehicleTypes } from '../DBfunctions/db';
 
 const Stack = createNativeStackNavigator();
 
@@ -57,21 +57,20 @@ const RootStack = () => {
       setLoading(true)
       const localUsers = await getUsers();
       const vehicleTypes = await getVehicleTypes();
+      const tariffList = await getTariff();
       let settings = await getSettings();
       if (!settings) {
         await addSettings('', '', '', '', 0, 0)
         settings = await getSettings();
       }
-      // console.log("localUsers", localUsers)
-      // console.log("vehicleTypes", vehicleTypes)
-      // console.log("settings", settings)
       if (localUsers.length > 0) {
         const user = localUsers[localUsers.length - 1]
+        const userIsLogin = user.isLogin == '1' ? true : false
         dispatch(setSettingsAc(settings))
         dispatch(setVehicleTypesAc(vehicleTypes))
         dispatch(setIsLockAc(user.isLock == '1' ? true : false))
         dispatch(setUserAc(user))
-        const userIsLogin = user.isLogin == '1' ? true : false
+        dispatch(setTariffsAc(tariffList))
 
         if (userIsLogin) {
           dispatch(setIsLoginAc(true))

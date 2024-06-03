@@ -20,8 +20,6 @@ import DrawerLogo from '../../components/DrawerLogo';
 import { navigationLockedRoutes, navigationRoutes, siteInfo } from '../../Config/env';
 
 const CustomDrawer = props => {
-  const [selectedName, setselectedName] = useState('Home');
-  const [layoutHeight, setlayoutHeight] = useState(20);
   const navigation = useNavigation();
 
   const user = useSelector(state => state?.auth?.user);
@@ -70,23 +68,21 @@ const CustomDrawer = props => {
                 useNativeDriver={true}>
                 <TouchableOpacity
                   onPress={() => {
-                    setselectedName(v)
                     onNavigate(navigation, v)
                   }
                   }
                   style={{
                     height: 45,
-                    backgroundColor: selectedName == v ? lightTheme.lightBlack : lightTheme.white,
-                    borderBottomRightRadius: 10,
-                    borderTopRightRadius: 10,
+                    backgroundColor: lightTheme.lightSilver,
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-around',
+                    marginBottom: 5
                   }}>
                   <Base_Text numberOfLines={1} text={navigationRoutes[v].label}
                     width={"70%"}
                     textAlign={"left"}
-                    color={selectedName == v ? lightTheme.white : lightTheme.lightBlack}
+                    color={lightTheme.lightBlack}
                   />
                 </TouchableOpacity>
               </View>
@@ -102,23 +98,21 @@ const CustomDrawer = props => {
                 useNativeDriver={true}>
                 <TouchableOpacity
                   onPress={() => {
-                    setselectedName(v)
                     onNavigate(navigation, v)
                   }
                   }
                   style={{
                     height: 45,
-                    backgroundColor: selectedName == v ? lightTheme.lightBlack : lightTheme.white,
-                    borderBottomRightRadius: 10,
-                    borderTopRightRadius: 10,
+                    backgroundColor: lightTheme.lightSilver,
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-around',
+                    marginBottom: 5
                   }}>
                   <Base_Text numberOfLines={1} text={navigationLockedRoutes[v].label}
                     width={"70%"}
                     textAlign={"left"}
-                    color={selectedName == v ? lightTheme.white : lightTheme.lightBlack}
+                    color={lightTheme.lightBlack}
                   />
                 </TouchableOpacity>
               </View>

@@ -3,7 +3,7 @@
 import { openDatabase } from "react-native-sqlite-storage";
 
 const db = openDatabase({
-    name: "otopark_db",
+    name: "otopark_db",//carpos_otopark_db
 });
 
 
@@ -15,6 +15,8 @@ const dbTables = {
     settings: "settings",
     inCarParking: "incarparking",
     exitInCarParking: "exitincarparking",
+    vtHours: "vt_hours",
+    vtTariffs: "vt_tariffs",
 }
 
 //DELETE FROM users
@@ -35,7 +37,11 @@ export const createTables = () => {
                 },
             );
             //vehicle types
-            txn.executeSql(`CREATE TABLE IF NOT EXISTS ${dbTables.vehicleType} (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(100), huorlyPrice REAL)`)
+            txn.executeSql(`CREATE TABLE IF NOT EXISTS ${dbTables.vehicleType} (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(100))`)
+            //Tariffs
+            txn.executeSql(`CREATE TABLE IF NOT EXISTS ${dbTables.vtTariffs} (id INTEGER PRIMARY KEY AUTOINCREMENT, vehicle_type_id INTEGER, hour_id INTEGER, price REAL)`)
+            //Hours
+            txn.executeSql(`CREATE TABLE IF NOT EXISTS ${dbTables.vtHours} (id INTEGER PRIMARY KEY AUTOINCREMENT, hour2 INTEGER)`)
             //settings
             txn.executeSql(`CREATE TABLE IF NOT EXISTS ${dbTables.settings} (id INTEGER PRIMARY KEY AUTOINCREMENT, addressLine1 VARCHAR(200), addressLine2 VARCHAR(200), addressLine3 VARCHAR(200), phoneNumber VARCHAR(100), carInPrint INTEGER(1), carOutPrint INTEGER(1))`)
             //inCarParking
@@ -182,12 +188,12 @@ export const getVehicleTypes = () => {
         });
     })
 };
-export const addVehicleType = (name, huorlyPrice) => {
+export const addVehicleType = (name) => {
     return new Promise((resolve, reject) => {
         db.transaction(txn => {
             txn.executeSql(
-                `INSERT INTO ${dbTables.vehicleType} (name,huorlyPrice) VALUES (?,?)`,
-                [name, huorlyPrice],
+                `INSERT INTO ${dbTables.vehicleType} (name) VALUES (?)`,
+                [name],
                 (sqlTxn, res) => {
                     return resolve(res)
                 },
@@ -198,12 +204,12 @@ export const addVehicleType = (name, huorlyPrice) => {
         });
     })
 };
-export const updateVehicleType = (id, name, huorlyPrice) => {
+export const updateVehicleType = (id, name) => {
     return new Promise((resolve, reject) => {
         db.transaction(txn => {
             txn.executeSql(
-                `UPDATE ${dbTables.vehicleType} SET name = ?, huorlyPrice = ? WHERE id = ?`,
-                [name, huorlyPrice, id],
+                `UPDATE ${dbTables.vehicleType} SET name = ? WHERE id = ?`,
+                [name, id],
                 (sqlTxn, res) => {
                     return resolve(res)
                 },
@@ -232,6 +238,168 @@ export const deleteVehicleType = (id) => {
 };
 /**
 VehicleType END
+ **/
+
+/**
+Vehicle Hour
+ **/
+export const getHours = () => {
+    return new Promise((resolve, reject) => {
+        db.transaction(txn => {
+            txn.executeSql(`SELECT * FROM ${dbTables.vtHours} ORDER BY id ASC`,
+                [],
+                (sqlTxn, res) => {
+                    let len = res.rows.length;
+                    let results = [];
+                    if (len > 0) {
+                        for (let i = 0; i < len; i++) {
+                            let item = res.rows.item(i);
+                            results.push(item);
+                        }
+                    }
+                    return resolve(results)
+                },
+                error => {
+                    return reject(error)
+                },
+            );
+        });
+    })
+};
+export const addHour = (hour2) => {
+    return new Promise((resolve, reject) => {
+        db.transaction(txn => {
+            txn.executeSql(
+                `INSERT INTO ${dbTables.vtHours} (hour2) VALUES (?)`,
+                [hour2],
+                (sqlTxn, res) => {
+                    return resolve(res)
+                },
+                error => {
+                    return reject(error)
+                },
+            );
+        });
+    })
+};
+export const updateHour = (id, hour2) => {
+    return new Promise((resolve, reject) => {
+        db.transaction(txn => {
+            txn.executeSql(
+                `UPDATE ${dbTables.vtHours} SET hour2 = ? WHERE id = ?`,
+                [hour2, id],
+                (sqlTxn, res) => {
+                    return resolve(res)
+                },
+                error => {
+                    return reject(error)
+                },
+            );
+        });
+    })
+};
+export const deleteHour = (id) => {
+    return new Promise((resolve, reject) => {
+        db.transaction(txn => {
+            txn.executeSql(
+                `DELETE FROM ${dbTables.vtHours} WHERE id = ?`,
+                [id],
+                (sqlTxn, res) => {
+                    return resolve(res)
+                },
+                error => {
+                    return reject(error)
+                },
+            );
+        });
+    })
+};
+/**
+Vehicle Hour END
+ **/
+
+/**
+Vehicle Tariff
+ **/
+export const getTariff = () => {
+    return new Promise((resolve, reject) => {
+        db.transaction(txn => {
+            txn.executeSql(`SELECT t.* ,vt.name as vehicleTypeName, vh.hour2
+            FROM ${dbTables.vtTariffs} t
+            INNER JOIN ${dbTables.vehicleType} vt
+            ON t.vehicle_type_id=vt.id
+            INNER JOIN ${dbTables.vtHours} vh
+            ON t.hour_id=vh.id
+            ORDER BY vh.hour2 ASC`,
+                [],
+                (sqlTxn, res) => {
+                    let len = res.rows.length;
+                    let results = [];
+                    if (len > 0) {
+                        for (let i = 0; i < len; i++) {
+                            let item = res.rows.item(i);
+                            results.push(item);
+                        }
+                    }
+                    return resolve(results)
+                },
+                error => {
+                    return reject(error)
+                },
+            );
+        });
+    })
+};
+export const addTariff = (vehicle_type_id, hour_id, price) => {
+    return new Promise((resolve, reject) => {
+        db.transaction(txn => {
+            txn.executeSql(
+                `INSERT INTO ${dbTables.vtTariffs} (vehicle_type_id,hour_id,price) VALUES (?,?,?)`,
+                [vehicle_type_id, hour_id, price],
+                (sqlTxn, res) => {
+                    return resolve(res)
+                },
+                error => {
+                    return reject(error)
+                },
+            );
+        });
+    })
+};
+export const updateTariff = (id, vehicle_type_id, hour_id, price) => {
+    return new Promise((resolve, reject) => {
+        db.transaction(txn => {
+            txn.executeSql(
+                `UPDATE ${dbTables.vtTariffs} SET vehicle_type_id=?,hour_id=?,price=? WHERE id = ?`,
+                [vehicle_type_id, hour_id, price, id],
+                (sqlTxn, res) => {
+                    return resolve(res)
+                },
+                error => {
+                    return reject(error)
+                },
+            );
+        });
+    })
+};
+export const deleteTariff = (id) => {
+    return new Promise((resolve, reject) => {
+        db.transaction(txn => {
+            txn.executeSql(
+                `DELETE FROM ${dbTables.vtTariffs} WHERE id = ?`,
+                [id],
+                (sqlTxn, res) => {
+                    return resolve(res)
+                },
+                error => {
+                    return reject(error)
+                },
+            );
+        });
+    })
+};
+/**
+Vehicle Tariff END
  **/
 
 /**

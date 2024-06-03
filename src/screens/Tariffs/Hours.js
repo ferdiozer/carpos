@@ -1,47 +1,45 @@
 import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity, FlatList, Modal } from 'react-native'
 import React, { useState } from 'react'
-import Button from '../components/Buttons/Button'
-import lightTheme from '../utils/Theme'
+import Button from '../../components/Buttons/Button'
+import lightTheme from '../../utils/Theme'
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Base_Text from '../components/Texts/Base_Text'
+import Base_Text from '../../components/Texts/Base_Text'
 import { useSelector, useDispatch } from 'react-redux';
-import { addVehicleType, deleteVehicleType, getVehicleTypes, updateVehicleType } from '../DBfunctions/db'
-import { showToast } from '../helpers/ToastHelper'
-import { setVehicleTypesAc } from '../StateManagment/Redux/Actions/Index'
+import { addHour, deleteHour, getHours, updateHour } from '../../DBfunctions/db'
+import { showToast } from '../../helpers/ToastHelper'
+import { setHoursAc } from '../../StateManagment/Redux/Actions/Index'
 const Page = ({
     navigation
 }) => {
     const dispatch = useDispatch();
-    const vehicleTypes = useSelector(state => state?.auth?.vehicleTypes);
+    const vehicleHours = useSelector(state => state?.auth?.vehicleHours);
     const [itemId, setItemId] = useState('');
-    const [itemName, setItemName] = useState('');
-    const [itemHuorlyPrice, setItemHuorlyPrice] = useState('');
+    const [itemHour2, setItemHour2] = useState('');
     const [showModal, setShowModal] = useState(false);
 
 
-    const setVehicleTypes = async () => {
+    const setVehicleHours = async () => {
         try {
-            const vehicleTypes = await getVehicleTypes();
-            dispatch(setVehicleTypesAc(vehicleTypes))
+            const items = await getHours();
+            dispatch(setHoursAc(items))
         } catch (error) {
             console.error(error)
         }
     }
     const onSubmit = async () => {
-        if (itemName && !isNaN(Number(itemHuorlyPrice))) {
+        if (!isNaN(Number(itemHour2))) {
             try {
                 if (itemId) {
                     //update
-                    updateVehicleType(itemId, itemName, itemHuorlyPrice)
+                    await updateHour(itemId, Number(itemHour2))
                 } else {
                     //new
-                    addVehicleType(itemName, Number(itemHuorlyPrice))
+                    await addHour(Number(itemHour2))
                 }
                 setItemId('')
-                setItemName('')
-                setItemHuorlyPrice('')
+                setItemHour2('')
                 showToast({ message: 'Başarılı!' })
-                setVehicleTypes()
+                setVehicleHours()
                 setShowModal(false)
             } catch (error) {
                 console.error(error)
@@ -54,7 +52,7 @@ const Page = ({
     const onPressDelete = (item) => {
         Alert.alert(
             'Uyarı',
-            `${item.name} araç tipini silmek istediğinizden emin misiniz?`,
+            `silmek istediğinizden emin misiniz?`,
             [
                 {
                     text: 'Hayır',
@@ -63,8 +61,8 @@ const Page = ({
                 },
                 {
                     text: 'Evet', onPress: async () => {
-                        await deleteVehicleType(item.id)
-                        setVehicleTypes()
+                        await deleteHour(item.id)
+                        setVehicleHours()
                     },
                 },
             ],
@@ -83,7 +81,7 @@ const Page = ({
                 ListHeaderComponentStyle={{
                     paddingBottom: 20
                 }}
-                data={vehicleTypes}
+                data={vehicleHours}
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{ paddingTop: 20, justifyContent: 'center' }}
                 ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
@@ -97,15 +95,12 @@ const Page = ({
                     >
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <View style={{ flexDirection: 'row' }}>
-                                <Base_Text fontWeight={'400'} text={`#${item.id}`} color={lightTheme.lightBlack} />
-                                <Base_Text left={10} text={item.name} />
-                                <Base_Text left={20} fontWeight={'400'} text={item.huorlyPrice} color={lightTheme.lightBlack} />
+                                <Base_Text left={10} text={item.hour2} />
                             </View>
                             <View style={{ flexDirection: 'row' }}>
                                 <TouchableOpacity onPress={() => {
                                     setItemId(item.id)
-                                    setItemName(item.name)
-                                    setItemHuorlyPrice(item.huorlyPrice)
+                                    setItemHour2(item.hour2)
                                     setShowModal(true)
                                 }}>
                                     <AntDesign name='edit' size={22} color={lightTheme.black} />
@@ -140,40 +135,17 @@ const Page = ({
                     <View style={{ paddingVertical: 20 }}>
                         <Base_Text text={itemId ? 'Düzenle' : 'Yeni'} />
                     </View>
-
                     <View style={{
                         marginBottom: 10
                     }}>
-                        <Base_Text bottom={5} text={'Araç tipi'} fontWeight={'400'} textAlign={'left'} />
-                        <TextInput
-                            keyboardType={'visible-password'}
-                            value={itemName}
-                            placeholder="Araç tipi giriniz"
-                            placeholderTextColor="#666666"
-                            //autoCapitalize="none"
-                            onChangeText={(val) => setItemName(val)}
-                            style={{
-                                borderColor: "gray",
-                                width: "100%",
-                                color: '#000',
-                                backgroundColor: '#FFF',
-                                borderRadius: 5,
-                                padding: 10,
-                            }}
-                        />
-                    </View>
-
-                    <View style={{
-                        marginBottom: 10
-                    }}>
-                        <Base_Text bottom={5} text={'Saatlik Fiyat'} fontWeight={'400'} textAlign={'left'} />
+                        <Base_Text bottom={5} text={'Saat Peryodu'} fontWeight={'400'} textAlign={'left'} />
                         <TextInput
                             onSubmitEditing={() => onSubmit()}
                             keyboardType={'number-pad'}
-                            value={itemHuorlyPrice.toString()}
-                            placeholder="Fiyat giriniz"
+                            value={itemHour2.toString()}
+                            placeholder="Saat giriniz"
                             placeholderTextColor="#666666"
-                            onChangeText={(val) => setItemHuorlyPrice(val)}
+                            onChangeText={(val) => setItemHour2(val)}
                             style={{
                                 borderColor: "gray",
                                 width: "100%",
@@ -193,7 +165,10 @@ const Page = ({
                     </View>
 
                     <View style={{}}>
-                        <Button border_Radius={5} bg_color={lightTheme.inputError} width={'100%'} OnClick={() => setShowModal(!showModal)} height={40} label={"KAPAT"} />
+                        <Button border_Radius={5} bg_color={lightTheme.inputError} width={'100%'} OnClick={() => {
+                            setItemHour2('')
+                            setShowModal(!showModal)
+                        }} height={40} label={"KAPAT"} />
                     </View>
                 </View>
 

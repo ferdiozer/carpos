@@ -30,8 +30,8 @@ export const navigationLockedRoutes = {
     Settings: {
         label: 'Ayarlar'
     },
-    VehicleTypes: {
-        label: 'Araç tipleri'
+    Tariffs: {
+        label: 'Tarifeler'
     },
     Report: {
         label: 'Rapor'

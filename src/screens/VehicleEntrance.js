@@ -46,7 +46,7 @@ const Page = ({
         }
       }
     }
-    checkDrivers()
+    // checkDrivers()
   }, [])
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const Page = ({
           },
           {
             text: 'Tamam Şimdi Ekle', onPress: () => {
-              onNavigate(navigation, 'VehicleTypes')
+              onNavigate(navigation, 'Tariffs')
             },
           },
         ],
@@ -205,7 +205,7 @@ const Page = ({
       <ActionSheet
         ref={refActionSheet}
         title={'Araç tipi'}
-        options={vehicleTypes.map(v => v.name.toString() + " " + v.huorlyPrice.toString() + "₺").concat(['Kapat'])}
+        options={vehicleTypes.map(v => v.name.toString()).concat(['Kapat'])}
         cancelButtonIndex={vehicleTypes.length}
         destructiveButtonIndex={vehicleTypes.length}
         onPress={(index) => {
