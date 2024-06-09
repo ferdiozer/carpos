@@ -25,6 +25,7 @@ const Page = ({
   const user = useSelector(state => state?.auth?.user);
   const settings = useSelector(state => state?.auth?.settings);
   const vehicleTypes = useSelector(state => state?.auth?.vehicleTypes);
+  const vehicleTariffs = useSelector(state => state?.auth?.tariffList);
   const selectedVehicleTypeIndex = useSelector(state => state?.auth?.selectedVehicleTypeIndex) || 0;
 
   const [plate, setPlate] = useState('');
@@ -51,8 +52,8 @@ const Page = ({
 
   useEffect(() => {
     if (isFocused) {
-      if (vehicleTypes.length == 0) {
-        Alert.alert("Uyarı", "Öncelikle araç tipi ekleyin!", [
+      if (vehicleTypes.length == 0 || vehicleTariffs.length == 0) {
+        Alert.alert("Uyarı", "Öncelikle araç tipi ve tarife tanımlayın!", [
           {
             text: 'Daha sonra',
             onPress: () => console.log('Cancel Pressed'),
