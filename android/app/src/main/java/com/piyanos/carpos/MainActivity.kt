@@ -1,4 +1,4 @@
-package com.otopark
+package com.piyanos.carpos
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

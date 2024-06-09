@@ -74,9 +74,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.otopark"
+    namespace "com.piyanos.carpos"
     defaultConfig {
-        applicationId "com.otopark"
+        applicationId "com.piyanos.carpos"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

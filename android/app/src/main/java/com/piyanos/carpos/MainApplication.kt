@@ -1,4 +1,4 @@
-package com.otopark
+package com.piyanos.carpos
 
 import android.app.Application
 import com.facebook.react.PackageList
