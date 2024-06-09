@@ -1,11 +1,8 @@
-export const API_BASE_URL = "https://staging.canonms.online/api/"
-export const API_VERSION = "V1/"
 
 export const siteInfo = {
     appTitle: 'CARPOS',
     appVersion: '1.0.0',
-    piyanosBaseUrl: 'https://piyanos.com',
-    BASE_API_URL: 'https://piapi.piyanos.com',
+    piyanosBaseUrl: 'https://piyanos.com'
 }
 
 export const navigationRoutes = {
@@ -30,8 +27,8 @@ export const navigationLockedRoutes = {
     Settings: {
         label: 'Ayarlar'
     },
-    VehicleTypes: {
-        label: 'Araç tipleri'
+    Tariffs: {
+        label: 'Tarifeler'
     },
     Report: {
         label: 'Rapor'

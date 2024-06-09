@@ -26,28 +26,35 @@ const Page = ({ navigation, route }) => {
   const isFocused = useIsFocused();
   const user = useSelector(state => state?.auth?.user);
   const settings = useSelector(state => state?.auth?.settings);
+  const vehicleTariffs = useSelector(state => state?.auth?.tariffList);
   const lastExitInCarParkingList = useSelector(state => state?.auth.lastExitInCarParkingList) || [];
   const vehicleTypes = useSelector(state => state?.auth?.vehicleTypes);
   const [plate, setPlate] = useState('');
   const [showQrScan, setShowQrScan] = useState(false);
   useEffect(() => {
     const checkDrivers = async () => {
-      const bluetoothPermission = await requestBluetoothPermission()
-      if (bluetoothPermission) {
-        try {
-          const isEnabled = await BluetoothManager.checkBluetoothEnabled();
-          if (isEnabled) {
-            const devices = await BluetoothManager.enableBluetooth();
-            await BluetoothManager.connect(JSON.parse(devices).address);
-          } else {
-            Alert.alert("Uyarı", "Fiş yazdırmak için Bluetooth açık olmalı!")
+
+      try {
+        const bluetoothPermission = await requestBluetoothPermission()
+        if (bluetoothPermission) {
+          try {
+            const isEnabled = await BluetoothManager.checkBluetoothEnabled();
+            if (isEnabled) {
+              const devices = await BluetoothManager.enableBluetooth();
+              await BluetoothManager.connect(JSON.parse(devices).address);
+            } else {
+              Alert.alert("Uyarı", "Fiş yazdırmak için Bluetooth açık olmalı!")
+            }
+          } catch (error) {
+            console.error(error)
           }
-        } catch (error) {
-          console.error(error)
         }
+      } catch (error) {
+        console.error(error)
       }
+
     }
-    checkDrivers()
+    // checkDrivers()
   }, [])
 
   useEffect(() => {
@@ -58,19 +65,32 @@ const Page = ({ navigation, route }) => {
     }
   }, [isFocused]);
 
-  const getVehicleTypeById = (id) => {
-    const fI = vehicleTypes.findIndex(v => v.id == id)
-    if (fI != -1) {
-      return vehicleTypes[fI]
-    } else {
-      return {}
-    }
-  }
   const calculatePrice = (vehicleType, dateFrom, dateTo) => {
+    const recipes = vehicleTariffs.map(v => {
+      return {
+        id: v.hour_id,
+        hour2: v.hour2
+      }
+    })
     const diffHours = moment(dateTo).diff(moment(dateFrom), 'hours', true)
-    const huorlyPrice = getVehicleTypeById(vehicleType).huorlyPrice
-    let callRes = (Number(diffHours) * Number(huorlyPrice)).toFixed(2);
-    return callRes
+    // Tarifeyi ve ücreti belirleme
+    let totalPrice = 0;
+    let remainingHours = diffHours;
+
+    // Tarifeleri en büyükten en küçüğe sıralama
+    const sortedRecipes = recipes.sort((a, b) => b.hour2 - a.hour2);
+    for (let i = 0; i < sortedRecipes.length; i++) {
+      const recipe = sortedRecipes[i];
+      const priceEntry = vehicleTariffs.find(rp => rp.hour_id === recipe.id && rp.vehicle_type_id === vehicleType);
+      if (priceEntry) {
+        const fullPeriods = Math.floor(remainingHours / recipe.hour2);
+        totalPrice += fullPeriods * priceEntry.price;
+        remainingHours -= fullPeriods * recipe.hour2;
+      }
+    }
+
+
+    return totalPrice
   }
 
   const onSubmit = async (thisPlate = plate) => {
@@ -87,15 +107,6 @@ const Page = ({ navigation, route }) => {
       const dateNow = new Date().toISOString()
       let price = calculatePrice(inCar.vehicleType, inCar.date, dateNow)
       await addExitInCarParking(inCar.plate, inCar.date, inCar.vehicleType, dateNow, price)
-      console.log(
-        {
-          plate: plate,
-          date: inCar.date,
-          vehicleType: inCar.vehicleType,
-          exitDate: dateNow,
-          price: price
-        }
-      )
       dispatch(pushLastExistInCarParkingAc({
         plate,
         date: inCar.date,
@@ -161,7 +172,6 @@ const Page = ({ navigation, route }) => {
 
 
   const onSuccessQr = e => {
-    console.log('onSuccessQr', e.data)
     setShowQrScan(false)
     onSubmit(e.data)
   };

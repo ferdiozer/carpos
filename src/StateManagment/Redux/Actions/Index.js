@@ -8,6 +8,9 @@ export const SET_SETTINGS = "SET_SETTINGS";
 export const SET_SELECTED_VEHICLE_TYPE_INDEX = "SET_SELECTED_VEHICLE_TYPE_INDEX";
 export const PUSH_LAST_EXIST_IN_CAR_PARKING = "PUSH_LAST_EXIST_IN_CAR_PARKING";
 
+export const SET_HOURS = "SET_HOURS";
+export const SET_TARIFFS = "SET_TARIFFS";
+
 export const setUserAc = payload => ({
   type: SET_USER,
   payload: payload
@@ -50,6 +53,16 @@ export const setSelectedVehicleTypeIndexAc = payload => ({
 
 export const pushLastExistInCarParkingAc = payload => ({
   type: PUSH_LAST_EXIST_IN_CAR_PARKING,
+  payload: payload
+});
+
+export const setHoursAc = payload => ({
+  type: SET_HOURS,
+  payload: payload
+});
+
+export const setTariffsAc = payload => ({
+  type: SET_TARIFFS,
   payload: payload
 });
 

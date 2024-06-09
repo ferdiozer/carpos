@@ -8,7 +8,7 @@ import Home from '../../screens/Home';
 import VehicleEntrance from '../../screens/VehicleEntrance';
 import VehicleExit from '../../screens/VehicleExit';
 import Profile from '../../screens/Profile';
-import VehicleTypes from '../../screens/VehicleTypes';
+import Tariffs from '../../screens/Tariffs/index';
 import Settings from '../../screens/Settings';
 import CarParking from '../../screens/CarParking';
 import Report from '../../screens/Report';
@@ -35,7 +35,7 @@ const Drawer_Index = () => {
       <Drawer.Screen name="VehicleExit" options={{ title: navigationRoutes.VehicleExit.label }} component={VehicleExit} />
       <Drawer.Screen name="CarParking" options={{ title: navigationRoutes.CarParking.label }} component={CarParking} />
       <Drawer.Screen name="Profile" options={{ title: navigationRoutes.Profile.label }} component={Profile} />
-      <Drawer.Screen name="VehicleTypes" options={{ title: navigationLockedRoutes.VehicleTypes.label }} component={VehicleTypes} />
+      <Drawer.Screen name="Tariffs" options={{ title: navigationLockedRoutes.Tariffs.label }} component={Tariffs} />
       <Drawer.Screen name="Settings" options={{ title: navigationLockedRoutes.Settings.label }} component={Settings} />
       <Drawer.Screen name="Report" options={{ title: navigationLockedRoutes.Report.label }} component={Report} />
     </Drawer.Navigator>

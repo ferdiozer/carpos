@@ -65,7 +65,7 @@ const Page = ({
           },
           {
             text: 'Tamam Şimdi Ekle', onPress: () => {
-              onNavigate(navigation, 'VehicleTypes')
+              onNavigate(navigation, 'Tariffs')
             },
           },
         ],
