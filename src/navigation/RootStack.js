@@ -75,13 +75,13 @@ const RootStack = () => {
         if (userIsLogin) {
           dispatch(setIsLoginAc(true))
         } else {
-          dispatch(setIsLoginAc(false))
+          dispatch(setIsLoginAc(true))//TODO!!  dispatch(setIsLoginAc(false))
         }
       } else {
-        dispatch(setIsLoginAc(false))
+        dispatch(setIsLoginAc(true))//TODO!!  dispatch(setIsLoginAc(false))
       }
     } catch (error) {
-      dispatch(setIsLoginAc(false))
+      dispatch(setIsLoginAc(true))//TODO!!  dispatch(setIsLoginAc(false))
     } finally {
       setLoading(false)
     }

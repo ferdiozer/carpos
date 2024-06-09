@@ -2,7 +2,7 @@ import { PUSH_LAST_EXIST_IN_CAR_PARKING, SET_HOURS, SET_IS_LOCK, SET_IS_LOGIN, S
 
 const initialState = {
   isLoading: false,
-  isLogin: false,
+  isLogin: true,  // TODO!!   isLogin: false,
   isLock: true,
   user: {},
   token: null,

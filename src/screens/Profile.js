@@ -183,9 +183,9 @@ const Page = ({
 
 
 
-                    <View>
+                    {/* <View>
                         <Button OnClick={logoutEvent} border_Radius={5} bg_color={lightTheme.reject} height={40} label={t("screens.profile.exit")} />
-                    </View>
+                    </View> */}
 
                 </View>
 
