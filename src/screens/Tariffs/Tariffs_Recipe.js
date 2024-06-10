@@ -71,7 +71,7 @@ console.log("vehicleTariffs",vehicleTariffs)
     const onPressDelete = (item) => {
         Alert.alert(
             'Uyarı',
-            `${item.name} araç tipini silmek istediğinizden emin misiniz?`,
+            'Silmek istediğinizden emin misiniz?',
             [
                 {
                     text: 'Hayır',
