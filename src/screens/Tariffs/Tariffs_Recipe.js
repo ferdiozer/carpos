@@ -26,9 +26,6 @@ const Page = ({
     const refActionSheetHours = useRef(null)
     const refActionSheetVehicleTypes = useRef(null)
 
-    console.log("vehicleTariffs", vehicleTariffs)
-
-
     useEffect(() => {
         checkVehicleTypeAndHours()
     }, []);
