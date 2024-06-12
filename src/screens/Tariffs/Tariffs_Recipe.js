@@ -10,11 +10,12 @@ import { addVehicleType, deleteVehicleType, getVehicleTypes, updateVehicleType, 
 import { showToast } from '../../helpers/ToastHelper'
 import { setTariffsAc, setVehicleTypesAc } from '../../StateManagment/Redux/Actions/Index'
 const Page = ({
-    navigation
+    navigation,
+    setSelectedTabIndex
 }) => {
     const dispatch = useDispatch();
-    const vehicleTypes = useSelector(state => state?.auth?.vehicleTypes);
-    const vehicleHours = useSelector(state => state?.auth?.vehicleHours);
+    const vehicleTypes = useSelector(state => state?.auth?.vehicleTypes) || []
+    const vehicleHours = useSelector(state => state?.auth?.vehicleHours) || []
     const vehicleTariffs = useSelector(state => state?.auth?.tariffList);
     const [selectedVehicleTypeIndex, setSelectedVehicleTypeIndex] = useState(0);
     const [selectedVehicleHourIndex, setSelectedVehicleHourIndex] = useState(0);
@@ -25,7 +26,13 @@ const Page = ({
     const refActionSheetHours = useRef(null)
     const refActionSheetVehicleTypes = useRef(null)
 
-console.log("vehicleTariffs",vehicleTariffs)
+    console.log("vehicleTariffs", vehicleTariffs)
+
+
+    useEffect(() => {
+        checkVehicleTypeAndHours()
+    }, []);
+
 
     const getLocalTariffs = async () => {
         try {
@@ -44,7 +51,35 @@ console.log("vehicleTariffs",vehicleTariffs)
             console.error(error)
         }
     }
+
+    const checkVehicleTypeAndHours = () => {
+        let gotoPageIndex = null
+        let gotoPageText = ''
+        if (vehicleTypes.length == 0) {
+            gotoPageIndex = 1
+            gotoPageText = 'Tanımlamak için öncelikle araç tiplerini ekleyin.'
+        }
+        if (vehicleHours.length == 0) {
+            gotoPageIndex = 2
+            gotoPageText = 'Tanımlamak için öncelikle saat baremlerini ekleyin.'
+        }
+        if (gotoPageIndex) {
+            Alert.alert("Uyarı", gotoPageText, [
+                {
+                    text: 'Daha sonra',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                },
+                {
+                    text: 'Tamam Şimdi Ekle', onPress: () => {
+                        setSelectedTabIndex(gotoPageIndex)
+                    },
+                },
+            ], { cancelable: false })
+        }
+    }
     const onSubmit = async () => {
+        checkVehicleTypeAndHours()
         if (!isNaN(Number(itemPrice))) {
             try {
                 if (itemId) {

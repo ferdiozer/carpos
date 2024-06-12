@@ -23,7 +23,7 @@ const Page = ({
                 </TouchableOpacity>
             </View>
             <View style={{ flex: 1 }}>
-                {selectedTabIndex == 0 && <Tariffs_Recipe />}
+                {selectedTabIndex == 0 && <Tariffs_Recipe setSelectedTabIndex={setSelectedTabIndex} />}
                 {selectedTabIndex == 1 && <VehicleTypes />}
                 {selectedTabIndex == 2 && <Hours />}
             </View>
